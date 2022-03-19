@@ -3,7 +3,7 @@
 A simple garden log visualized as a contribution graph.  A Github profile for
 your plants. 
 
-![example](example.png)
+![example](example.gif)
 
 ## Installing
 
