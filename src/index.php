@@ -171,6 +171,11 @@
 </div>
 
 <div>
+<label for='weight' accesskey='w'>Weight ounces</label>
+<input name='weight' id='weight' type='number' min='0' max='1600'>
+</div>
+
+<div>
 <label for='variety' accesskey='v'>Variety</label>
 <input name='variety' id='variety' type='text'></br>
 </div>

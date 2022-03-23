@@ -14,6 +14,7 @@ if (isset($_POST['date']))       $date       = $_POST['date'];
 if (isset($_POST['plant']))      $plant      = $_POST['plant'];
 if (isset($_POST['quantity']))   $quantity   = $_POST['quantity'];
 if (isset($_POST['variety']))    $variety    = $_POST['variety'];
+if (isset($_POST['weight']))     $weight     = $_POST['weight'];
 
 if ($action == '') die('An action is required');
 if ($date == '') die('A date is required');
@@ -25,12 +26,13 @@ $query = "
 		'bed',        $2::TEXT,
 		'plant',      $3::TEXT,
 		'quantity',   $4::TEXT,
-		'variety',    $5::TEXT
-	),$6::TIMESTAMPTZ)
+		'variety',    $5::TEXT,
+		'weight',     $6::TEXT
+	),$7::TIMESTAMPTZ)
 	";
 $result = pg_prepare($dbconn, 'log_entry', $query) or die('Query prepare failed: ' . pg_last_error());
 $result = pg_execute($dbconn, 'log_entry', array(
-	$action, $bed, $plant, $quantity, $variety, $date
+	$action, $bed, $plant, $quantity, $variety, $weight, $date
 	)) or die('Query execute failed: ' . pg_last_error());
 
 pg_close($dbconn);
