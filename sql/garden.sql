@@ -61,12 +61,21 @@ SELECT
 	ts,
 	CASE WHEN lag(ts::date) OVER (ORDER BY ts DESC) = ts::date THEN
 	NULL ELSE to_char(date_trunc('day',ts),'Month DD YYYY') END AS date,
-	format('%1$sed %2$s%3$s%4$s%5$s',
+
+	/* "Actioned ammount plant in bed" */
+	format('%1$sed %2$s%3$s%4$s',
 		a.label,
-		CASE WHEN l.quantity > 0 THEN l.quantity || ' ' ELSE '' END, 
-		CASE WHEN v.label IS NOT NULL THEN v.label || ' ' ELSE '' END, 
-		p.label,
+
+		CASE WHEN l.weight_oz IS NOT NULL AND a.label = 'harvest' THEN
+			(l.weight_oz/16)::TEXT || ' pounds ' ||
+			(MOD(l.weight_oz, 16))::TEXT || ' ounces '
+		WHEN l.quantity > 0 THEN l.quantity || ' ' ELSE '' END,
+
+		CASE WHEN v.label IS NOT NULL THEN v.label ||' '|| p.label
+		ELSE p.label END,
+
 		CASE WHEN b.label IS NOT NULL THEN ' in ' || b.label ELSE '' END
+
 	) AS action
 FROM garden.ledger l
 JOIN garden.actions a USING (action)
@@ -88,6 +97,7 @@ DECLARE
 	plant          INTEGER;
 	quantity       INTEGER;
 	variety        INTEGER;
+	weight         INTEGER;
 	bed            INTEGER;
 BEGIN
 
@@ -164,14 +174,22 @@ BEGIN
 		SELECT ($1->>'quantity')::INTEGER INTO quantity;
 	END IF;
 
+	/* Weight can be optional */
+	IF $1 ? 'weight' AND NOT $1->>'weight' = '' THEN
+		SELECT ($1->>'weight')::INTEGER INTO weight;
+	END IF;
+
 	/*
 	 * INSERT into the garden ledger creating a new PARTITION if needed.
 	 */
 	need_to_part := true;
 	LOOP
 		BEGIN
-			INSERT INTO garden.ledger ( action, plant, variety, quantity, bed, ts )
-			VALUES (action, plant, variety, quantity, bed, $2);
+			INSERT INTO garden.ledger (
+				action, plant, variety, bed, quantity, weight_oz, ts
+			) VALUES (
+				action, plant, variety, bed, quantity, weight, $2
+			);
 
 			need_to_part := false;
 			EXIT;
