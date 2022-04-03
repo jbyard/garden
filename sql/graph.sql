@@ -50,9 +50,9 @@ FROM (
 		CASE WHEN d.ts::date < NOW()::date - '1 year'::interval OR d.ts > NOW()
 		THEN NULL
 		WHEN COUNT(l.*) = 0 THEN 'none'
-		WHEN COUNT(l.*) < 10 THEN 'light'
-		WHEN COUNT(l.*) < 20 THEN 'medium'
-		WHEN COUNT(l.*) < 30 THEN 'heavy'
+		WHEN COUNT(l.*) < 7 THEN 'light'
+		WHEN COUNT(l.*) < 14 THEN 'medium'
+		WHEN COUNT(l.*) < 21 THEN 'heavy'
 		ELSE 'dank' END AS class,
 		NULL::TEXT AS label,
 		to_char(d.ts,'Day Mon DD, YYYY') AS details
@@ -82,10 +82,10 @@ UNION ALL
 
 SELECT * FROM ( VALUES
 (9,NULL::INTEGER,NULL::date,'none',NULL::TEXT,'No contributions'),
-(9,NULL::INTEGER,NULL::date,'light',NULL::TEXT,'0-9 contributions'),
-(9,NULL::INTEGER,NULL::date,'medium',NULL::TEXT,'10-19 contributions'),
-(9,NULL::INTEGER,NULL::date,'heavy',NULL::TEXT,'20-29 contributions'),
-(9,NULL::INTEGER,NULL::date,'dank',NULL::TEXT,'30+ contributions')
+(9,NULL::INTEGER,NULL::date,'light',NULL::TEXT,'0-6 contributions'),
+(9,NULL::INTEGER,NULL::date,'medium',NULL::TEXT,'7-13 contributions'),
+(9,NULL::INTEGER,NULL::date,'heavy',NULL::TEXT,'14-20 contributions'),
+(9,NULL::INTEGER,NULL::date,'dank',NULL::TEXT,'21+ contributions')
 ) AS legend;
 COMMENT ON VIEW garden.contributions IS
 'Contribution graph of the past year''s garden activity.';
