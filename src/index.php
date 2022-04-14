@@ -97,8 +97,30 @@
 <ul>
 <?php
 
+	$selected = $previous = $next = NULL;
+
+	$query = "
+		SELECT previous, selected, next
+		FROM garden.date_nav(COALESCE($1,NOW()::date))
+		";
+
+	$result = pg_prepare($dbconn, 'date_nav', $query)
+		or die('Query prepare failed: ' . pg_last_error());
+
+	$result = pg_execute($dbconn, 'date_nav', array($_GET["date"]))
+		or die('Query execute failed: ' . pg_last_error());
+
+	while ($row = pg_fetch_array($result, null, PGSQL_ASSOC)) {
+		$selected   = $row["selected"];
+		$previous   = $row["previous"];
+		$next       = $row["next"];
+	}
+
+
 	$title_html = '<h2>';
-	$title_html .= isset($_GET["date"]) ? $_GET["date"] : 'Today';
+	$title_html .= isset($previous) ? "<a href='index.php?date=$previous'><  </a>" : '';
+	$title_html .= $selected;
+	$title_html .= isset($next) ? "<a href='index.php?date=$next'>  ></a>" : '';
 	$title_html .= '</h2>';
 	echo $title_html;
 
