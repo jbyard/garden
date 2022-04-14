@@ -64,7 +64,8 @@ SELECT
 
 	/* "Actioned ammount plant in bed" */
 	format('%1$sed %2$s%3$s%4$s',
-		a.label,
+
+		CASE WHEN a.label IN ('pot') THEN a.label || 't' ELSE a.label END,
 
 		CASE WHEN l.weight_oz IS NOT NULL AND a.label = 'harvest' THEN
 			(l.weight_oz/16)::TEXT || ' pounds ' ||
