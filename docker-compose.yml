@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+    api:
+        container_name: webserver
+        image: nginx:alpine
+        ports:
+            - "80:80"
+        volumes:
+            - ./src:/var/www/html
+            - ./site.conf:/etc/nginx/conf.d/site.conf
+        links:
+            - php8
+            - php7
+            - php5
+    database:
+        container_name: database
+        restart: always
+        build:
+            context: ./
+            dockerfile: ./docker/db/Dockerfile
+        ports:
+            - "5432:5432"
+        env_file:
+            - ./.env
+
+    php8:
+        container_name: php-8
+        build:
+            context: ./docker/php/php8
+            dockerfile: Dockerfile
+        volumes:
+            - ./src:/var/www/html
+            - ./env.php:/var/www/html/.env.php
+    php7:
+        container_name: php-7
+        build:
+            context: ./docker/php/php7
+            dockerfile: Dockerfile
+        volumes:
+            - ./src:/var/www/html
+            - ./env.php:/var/www/html/.env.php
+    php5:
+        container_name: php-5
+        build:
+            context: ./docker/php/php5
+            dockerfile: Dockerfile
+        volumes:
+            - ./src:/var/www/html
+            - ./env.php:/var/www/html/.env.php
+

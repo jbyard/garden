@@ -20,10 +20,10 @@
 	<div class='row'>
 	 <div class='cell'></div>
 <?php
-	
+
 	require_once('.env.php');
-	
-	$dbconn = pg_connect("host=localhost dbname=".PGDATABASE." user=".PGUSER." password=".PGPASSWORD)
+
+	$dbconn = pg_connect("host=database dbname=".PGDATABASE." user=".PGUSER." password=".PGPASSWORD)
 			or die('Could not connect: ' . pg_last_error());
 
 	$query = "
@@ -42,17 +42,17 @@
 			$row_html = "\n\t</div>\n\t<div class='row'>\n\r\r<div class='cell'>";
 
 			switch ($row["rn"]) {
-				case 2: 
+				case 2:
 					$row_html .= "M";
 					break;
-				case 4: 
+				case 4:
 					$row_html .= "W";
 					break;
-				case 6: 
+				case 6:
 					$row_html .= "F";
 					break;
 			}
-			
+
 			$row_html .= "</div>";
 
 			echo $row_html;
@@ -73,7 +73,7 @@
 		}
 
 		$cell_html = "<a class='cell ".$row["class"]." ".$selected."' ";
-	
+
 		if(isset($row["date"])) {
 			$cell_html .= " href='index.php?date=".$row["date"]."' ";
 		}
@@ -152,10 +152,10 @@
 <h2>Update Log</h2>
 
 <?php
-	
+
 	$radio_html = '';
 	if (isset($_GET["date"])) {
-		
+
 		$radio_html .= "<input name='date' id='selected' type='radio' value='".$_GET["date"]."' checked='checked'>\n";
 		$radio_html .= "<label for='selected'>".$_GET["date"]."</label>\n";
 
@@ -165,7 +165,7 @@
 
 		$radio_html .= "<input name='date' id='today' type='radio' value='".date('Y/m/d')."' checked='checked'>\n";
 	}
-	
+
 	$radio_html .= "<label for='today'>Today</label>\n";
 
 	echo $radio_html;
