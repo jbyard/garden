@@ -7,6 +7,8 @@ your plants.
 
 ## Installing
 
+### Running Natively
+
 Clone this repo on your favorite webserver, desginate a PostgreSQL database,
 and execute the install make target.
 
@@ -14,20 +16,23 @@ and execute the install make target.
 PGUSER=joshb PGDATABASE=fishpoopfarms make install
 ```
 
-### Docker Installation
+### Running with Docker
 
-You will need to edit the .env file for postgres container to use.
+You will need to set which postgres container to use in the .env file.
 
-From a terminal run `docker-compose up` where the docker-compose.yml is located.  Visual Studio users can right-click the docker-compose.yml and to bring the app up.
+From a terminal run `docker-compose up` where the docker-compose.yml is
+located.  Visual Studio users can right-click the docker-compose.yml and to
+bring the app up.
 
-Note the src/ directory is synced to the webserver so there is no need to relaunch containers during development to test changes.
+Note the src/ directory is synced to the webserver so there is no need to
+relaunch containers during development to test changes.
 
 <br>
 
 #### Multiple Domains
 
-To map the server_name in the site.conf file, linux users will want to add entries to their `/etc/hosts` file.
- Windows users can edit
+To map the server_name in the site.conf file, linux users will want to add
+entries to their `/etc/hosts` file. Windows users can edit
 `C:\Windows\System32\drivers\etc\hosts` to modify dns.
 
 ```
